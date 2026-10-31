@@ -8,6 +8,7 @@ A full-stack, production-ready Inquiry Management & CRM system designed for **K1
 
 | Service | Deployment Platform | URL |
 | :--- | :--- | :--- |
+| **GitHub Repository** | GitHub | [https://github.com/Sagar92115/project](https://github.com/Sagar92115/project) |
 | **Frontend Application** | Vercel | `https://your-frontend-deployment.vercel.app` *(Placeholder)* |
 | **Backend REST API** | Render | `https://your-backend-deployment.onrender.com` *(Placeholder)* |
 | **API Health Check** | Render | `https://your-backend-deployment.onrender.com/api/health` *(Placeholder)* |
