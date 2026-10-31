@@ -33,7 +33,6 @@ Built as a production monorepo adhering strictly to clean architectural principl
 | :---: | :---: |
 | ![Admin Dashboard](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/admin-dashboard.png)<br>*Filterable, searchable inquiry table with metric cards* | ![Status Modal](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/status-modal.png)<br>*Real-time status updater & full inquiry message view* |
 
-> *Note: Place your screenshot image files inside a `/docs/screenshots/` directory to render them directly in the repository.*
 
 ---
 
