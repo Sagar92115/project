@@ -1,436 +1,581 @@
-# EdTech CRM & Inquiry System
+# EdTech CRM & Inquiry Management System
 
-A full-stack, production-ready Inquiry Management & CRM system designed for **K12 Hunar** (Internship Assessment). Anyone can submit inquiries across multiple categories and user types, while authorized administrators can securely log in, search, filter, paginate, and manage inquiry statuses in real time.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://edtech-crm-three.vercel.app/)
+[![Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Sagar92115/project)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+
+An enterprise-grade, full-stack Inquiry Management and CRM platform engineered for educational institutions and platforms. The system provides an intuitive, accessible public portal for prospective students, parents, and schools to submit queries across academic and extracurricular programs. An authenticated administrative dashboard allows admissions and operations teams to review, search, filter, paginate, and track inquiry lifecycles in real time.
+
+Built as a production monorepo adhering strictly to clean architectural principles, secure custom JWT authentication, parameterized SQL query practices, and responsive modern UI design.
 
 ---
 
-## 🔗 Live Links
+## 🔗 Project Links & Deployments
 
-| Service | Deployment Platform | URL |
+| Component | Platform | URL |
 | :--- | :--- | :--- |
-| **GitHub Repository** | GitHub | [https://github.com/Sagar92115/project](https://github.com/Sagar92115/project) |
-| **Frontend Application** | Vercel | `https://your-frontend-deployment.vercel.app` *(Placeholder)* |
-| **Backend REST API** | Render | `https://your-backend-deployment.onrender.com` *(Placeholder)* |
-| **API Health Check** | Render | `https://your-backend-deployment.onrender.com/api/health` *(Placeholder)* |
+| **Frontend Web Application** | Vercel | [https://edtech-crm-three.vercel.app/](https://edtech-crm-three.vercel.app/) |
+| **Backend REST API** | Render | `https://<your-render-service-name>.onrender.com` *(Render Web Service)* |
+| **API Health Check** | Render | `https://<your-render-service-name>.onrender.com/api/health` |
+| **Source Code Repository** | GitHub | [https://github.com/Sagar92115/project](https://github.com/Sagar92115/project) |
 
 ---
 
-## 🔑 Demo Admin Credentials
+## 📸 Application Screenshots
 
-> [!NOTE]  
-> After running the seed command (`npm run seed:admin`), use these credentials to log into the Admin Portal at `/admin/login`:
+| Public Inquiry Submission Form | Admin Authentication Portal |
+| :---: | :---: |
+| ![Public Inquiry Form](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/inquiry-form.png)<br>*Accessible public portal with real-time field validation* | ![Admin Login](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/admin-login.png)<br>*Secure administrative authentication with custom JWT* |
 
-- **Admin Email**: `admin@k12hunar.com` *(Configurable via `.env`)*
-- **Admin Password**: `Admin@Secure2026!` *(Configurable via `.env`)*
+| Admin CRM Inquiry Management | Inquiry Inspection & Status Lifecycle |
+| :---: | :---: |
+| ![Admin Dashboard](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/admin-dashboard.png)<br>*Filterable, searchable inquiry table with metric cards* | ![Status Modal](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/status-modal.png)<br>*Real-time status updater & full inquiry message view* |
+
+> *Note: Place your screenshot image files inside a `/docs/screenshots/` directory to render them directly in the repository.*
 
 ---
 
-## ✨ Features
+## 🚀 Key Features
 
 ### 1. Public Inquiry Portal (`/`)
-- **Responsive Form**: Modern, accessible card interface with responsive layout.
-- **Categorization**: Dropdowns for User Type (`Parent`, `Student`, `School`) and Category (`Scholarship`, `Concert`, `Admission`, `General Query`).
-- **Validation**:
-  - Full Name (required, min 2 chars).
-  - Email (standard email regex validation & normalization).
-  - Phone Number (strictly validated to exactly 10 numeric digits).
-  - Query Message (required, 5–2000 chars with live counter).
-- **UX States**: Inline field error highlights, disabled submit button with animated loader while submitting, success notification with automatic form reset, and backend error alerts.
-- **Rate Limiting**: Public endpoint rate-limited to 20 inquiries per 15 minutes per IP to mitigate spam/abuse.
+- **Responsive Card Layout**: Polished, mobile-friendly interface designed with accessible form elements and high-contrast typography.
+- **Categorization & Profiling**:
+  - **User Types**: `Parent`, `Student`, `School`.
+  - **Inquiry Categories**: `Scholarship`, `Concert`, `Admission`, `General Query`.
+- **Strict Client-Side & Server-Side Validation**:
+  - **Full Name**: Required, trimmed, minimum 2 characters.
+  - **Email Address**: Validated against standard email formats and normalized.
+  - **Phone Number**: Strictly validated to exactly 10 numeric digits.
+  - **Query Message**: Required, multiline textarea (5–2000 characters) with a live character counter.
+- **Interactive UX States**:
+  - Contextual inline error messages underneath invalidated fields.
+  - Submission button displays an animated spinner and is disabled during pending requests to prevent duplicate submissions.
+  - Success banner upon submission with automated form state reset.
+  - Informative server error banners when network or database issues occur.
+- **Abuse Prevention**: Public POST inquiries endpoint is protected by an IP-based rate limiter (20 requests per 15 minutes).
 
 ### 2. Admin Authentication & Security (`/admin/login`)
-- **Custom JWT Authentication**: Implemented entirely from scratch in Node.js/Express with `jsonwebtoken` and `bcrypt`.
-- **Zero Third-Party Auth Lock-in**: **Strictly NO Supabase Auth, SDK, or RLS** is used. Supabase is used purely as a PostgreSQL database via standard connection strings.
-- **Timing-Safe Login**: Generic `"Invalid credentials"` response for any non-existent email or mismatched password.
-- **Brute-Force Protection**: Strict rate limiter (10 attempts per 15 minutes per IP) on the login endpoint.
-- **Protected Routes**: Custom Express middleware `authenticateToken` validates the `Authorization: Bearer <token>` header; React `ProtectedRoute` guards frontend routes and automatically clears expired sessions on `401 Unauthorized`.
+- **Custom JWT Implementation**: Complete token-based authentication implemented from scratch using `jsonwebtoken` and `bcrypt`.
+- **Zero Third-Party Auth Dependencies**: Built without reliance on Supabase Auth, client SDKs, or Supabase Row-Level Security (RLS) for authentication. Supabase functions strictly as standard PostgreSQL.
+- **Bcrypt Password Hashing**: Cryptographic password hashing utilizing 10 salt rounds.
+- **Timing-Safe Responses**: Protects against user enumeration by returning a generic `"Invalid credentials"` message on any authentication failure.
+- **Brute-Force Rate Limiting**: The login endpoint is capped at 10 requests per 15-minute window per IP.
+- **Session Verification**: Express middleware (`authenticateToken`) validates the `Authorization: Bearer <token>` header, while client-side `ProtectedRoute` guards private routes and automatically destroys stale tokens on `401 Unauthorized`.
 
 ### 3. Admin CRM Dashboard (`/admin`)
-- **Tabular View**: Displays Candidate Name, Phone, Email, User Type, Category, Formatted Submission Date, and Current Status.
-- **Live Status Updates**: Inline select dropdown (`New`, `In Progress`, `Resolved`) with color-coded status badges that triggers a `PATCH /api/inquiries/:id/status` update with optimistic UI feedback.
-- **Search & Filtering**:
+- **Comprehensive Tabular View**: Displays Candidate Name, Contact Information (clickable email and phone links), User Type badge, Category badge, Formatted Submission Timestamp, and Current Status.
+- **Real-Time Lifecycle Tracking**: Inline dropdown allows instant switching between `New`, `In Progress`, and `Resolved` statuses via `PATCH /api/inquiries/:id/status` with optimistic UI updates and rollback protection.
+- **Multi-Parameter Filtering**:
   - Filter by Category (`Scholarship`, `Concert`, `Admission`, `General Query`).
   - Filter by User Type (`Parent`, `Student`, `School`).
-  - Search bar with **400ms debounce** matching Candidate Name or Phone number.
-  - "Reset All Filters" button.
-- **Pagination**: Server-side pagination with configurable page limits and item range metrics (`Showing 1 to 10 of X`).
-- **Responsive Design**: Clean mobile responsiveness with horizontal table scrolling and a quick message inspection modal.
+  - **Debounced Search**: Search input with a 400ms debounce that matches candidate names or phone numbers using case-insensitive SQL `ILIKE`.
+  - **One-Click Filter Reset**: Quickly clears all filters and returns to the unfiltered view.
+- **Server-Side Pagination**: Efficient database-level pagination supporting configurable limits, total counts, and page indicators.
+- **Detailed Inquiry Modal**: Dedicated inspection modal allowing administrators to read lengthy inquiry texts without breaking tabular layout.
+- **Metric Cards**: Real-time summary tiles showcasing total inquiries along with active counts on the current view.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Complete Technology Stack
 
-| Layer | Technologies |
-| :--- | :--- |
-| **Frontend** | React 18, Vite, Tailwind CSS, React Router v6, Axios, Lucide React |
-| **Backend** | Node.js, Express.js |
-| **Database** | PostgreSQL (hosted on Supabase, connected via `pg` library) |
-| **Security & Auth** | Custom JWT (`jsonwebtoken`), `bcrypt` (10 salt rounds), `helmet`, `express-rate-limit`, `express-validator`, `cors` |
+```
+Frontend:   React 18 + Vite 6 + Tailwind CSS 3 + React Router v6 + Axios + Lucide Icons
+Backend:    Node.js (v18+) + Express.js 4 + PostgreSQL Driver (pg)
+Security:   Custom JWT (jsonwebtoken) + Bcrypt + Helmet + Express Rate Limit + Express Validator + CORS
+Database:   PostgreSQL (Supabase-hosted, accessed via standard connection pooler with SSL)
+Hosting:    Vercel (Frontend SPA) + Render (Backend Web Service)
+```
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend Framework** | React 18 (Vite 6) | Component-based, lightning-fast client interface with Hot Module Replacement |
+| **Styling & Icons** | Tailwind CSS 3, Lucide React | Utility-first responsive styling and modern SVG iconography |
+| **Routing & Client API** | React Router v6, Axios | SPA client routing, Axios interceptors for JWT injection and 401 redirection |
+| **Server Framework** | Node.js, Express.js | Scalable REST API architecture with modular routers and controllers |
+| **Database & Client** | PostgreSQL, `pg` (node-postgres) | Relational persistence, connection pooling, SSL enforcement |
+| **Authentication** | `jsonwebtoken`, `bcrypt` | Custom JWT generation/verification, 10-round salted password hashing |
+| **Validation & Security** | `express-validator`, `helmet`, `cors`, `express-rate-limit` | Input sanitization, HTTP security headers, CORS origin whitelisting, IP rate limiting |
+| **Monorepo Tooling** | `concurrently` | Unified parallel development script running backend and frontend simultaneously |
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Architecture & Monorepo Structure
 
 ```text
 edtech-crm/
-├── .gitignore
-├── README.md
+├── .gitignore                     # Ignores node_modules, local .env, dist, build, logs
+├── package.json                   # Root monorepo orchestration scripts
+├── package-lock.json
+├── README.md                      # Project documentation and developer guide
 ├── backend/
-│   ├── .env.example               # Backend environment template
-│   ├── package.json
-│   ├── schema.sql                 # Supabase PostgreSQL schema & indexes
-│   ├── server.js                  # Main Express application entrypoint
+│   ├── .env.example               # Backend environment variable template
+│   ├── package.json               # Backend dependencies and execution scripts
+│   ├── schema.sql                 # PostgreSQL DDL table definitions, CHECK constraints, and indexes
+│   ├── server.js                  # Main Express application initialization and middleware chain
 │   └── src/
 │       ├── config/
-│       │   └── db.js              # pg connection pool (SSL enabled)
+│       │   └── db.js              # PostgreSQL connection pool with robust SSL configuration
 │       ├── controllers/
-│       │   ├── auth.controller.js
-│       │   └── inquiry.controller.js
+│       │   ├── auth.controller.js # Authentication controller (login, token issuance, session check)
+│       │   └── inquiry.controller.js # Public submission, parameterized filtering, status update
 │       ├── middleware/
-│       │   ├── auth.middleware.js # Bearer token verification
-│       │   ├── error.middleware.js# Global error & 404 handler
-│       │   └── validate.middleware.js # express-validator wrapper
+│       │   ├── auth.middleware.js # Authorization Bearer token validation middleware
+│       │   ├── error.middleware.js# Centralized 404 and global 500 error handlers
+│       │   └── validate.middleware.js # express-validator error extractor
 │       ├── routes/
-│       │   ├── auth.routes.js     # /api/auth/login, /api/auth/me
-│       │   └── inquiry.routes.js  # /api/inquiries, status patch
+│       │   ├── auth.routes.js     # /api/auth route definitions
+│       │   └── inquiry.routes.js  # /api/inquiries route definitions
 │       └── scripts/
-│           ├── seedAdmin.js       # Admin bcrypt seeding script
+│           ├── initDb.js          # Automated database schema execution script
+│           ├── seedAdmin.js       # Admin account creation script using bcrypt
 │           └── verifyBackend.js   # Automated API verification test suite
 └── frontend/
-    ├── .env.example               # Frontend environment template
-    ├── index.html
-    ├── package.json
-    ├── postcss.config.js
-    ├── tailwind.config.js
+    ├── .env.example               # Frontend environment variable template
+    ├── index.html                 # Single Page Application HTML shell
+    ├── package.json               # Frontend dependencies and Vite build scripts
+    ├── postcss.config.js          # PostCSS configuration for Tailwind CSS
+    ├── tailwind.config.js         # Tailwind styling and custom palette extensions
     ├── vercel.json                # SPA rewrite rule for client-side routing
-    ├── vite.config.js
+    ├── vite.config.js             # Vite configuration and React plugin setup
     └── src/
         ├── api/
-        │   └── client.js          # Axios instance + interceptors (auth & 401 redirect)
+        │   └── client.js          # Axios client with request & response interceptors
         ├── components/
-        │   ├── Filters.jsx        # Search + Category + UserType filter bar
-        │   ├── InquiryTable.jsx   # Interactive table + inline status updater
-        │   ├── Navbar.jsx         # Header navigation & logout
-        │   ├── Pagination.jsx     # Dynamic pagination controls
-        │   └── ProtectedRoute.jsx # Client-side route protection
+        │   ├── Filters.jsx        # Category, user type, and debounced search filter bar
+        │   ├── InquiryTable.jsx   # Data table with inline status dropdown and inquiry modal
+        │   ├── Navbar.jsx         # Header navigation bar with session details and logout
+        │   ├── Pagination.jsx     # Dynamic pagination controls with range calculation
+        │   └── ProtectedRoute.jsx # Authentication guard for private administrative routes
         ├── pages/
-        │   ├── AdminDashboard.jsx # Admin management portal
-        │   ├── AdminLogin.jsx     # Admin authentication page
-        │   └── InquiryForm.jsx    # Public submission form
-        ├── App.jsx
-        ├── index.css
-        └── main.jsx
+        │   ├── AdminDashboard.jsx # Protected inquiry management portal
+        │   ├── AdminLogin.jsx     # Admin authentication portal with visibility toggling
+        │   └── InquiryForm.jsx    # Public-facing inquiry submission portal
+        ├── App.jsx                # React Router hierarchy
+        ├── index.css              # Tailwind base imports and scrollbar styles
+        └── main.jsx               # React DOM entry point
 ```
 
 ---
 
-## 🚀 Full Local Setup Guide
+## 🗄️ Database Setup (Supabase PostgreSQL)
 
-### 1. Prerequisites
-- **Node.js** v18+ (tested on Node v20/v24)
-- **npm** v9+
-- A free **Supabase** account (or local PostgreSQL)
+The application utilizes PostgreSQL. While hosted on Supabase, the application interacts with it strictly as a standard relational database through standard TCP connection strings using the `pg` client.
 
-### 2. Database Setup (Supabase)
-1. Log in to [Supabase](https://supabase.com) and click **New project**.
-2. Give your project a name (e.g. `k12-hunar-crm`) and set a strong database password.
-3. Once provisioned, open the **SQL Editor** tab from the left sidebar.
-4. Open the [`backend/schema.sql`](file:///backend/schema.sql) file from this repository, copy its content, paste it into the Supabase SQL editor, and click **Run**.
-   - This creates the `admins` table, `inquiries` table, CHECK constraints, and performance indexes (`idx_inquiries_category`, `idx_inquiries_user_type`, `idx_inquiries_created_at`, `idx_inquiries_status`).
-5. In Supabase, go to **Project Settings** -> **Database** -> **Connection String** -> select **URI** (or Transaction / Session Pooler) and copy your connection string:
-   ```text
-   postgresql://postgres.[YOUR-PROJECT-REF]:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?sslmode=require
-   ```
+### 1. Database Creation
+1. Create a project at [Supabase](https://supabase.com).
+2. Note your database password and retrieve your **PostgreSQL Connection String (URI)** from **Project Settings → Database → Connection String**.
 
-### 3. Backend Setup
-1. Open a terminal and navigate to `/backend`:
-   ```bash
-   cd backend
-   ```
-2. Copy the sample environment file:
-   ```bash
-   cp .env.example .env
-   ```
-3. Edit `backend/.env` with your values:
-   ```env
-   PORT=5000
-   DATABASE_URL=postgresql://postgres.your-project-ref:your-db-password@aws-0-region.pooler.supabase.com:6543/postgres?sslmode=require
-   JWT_SECRET=super_secret_jwt_random_key_min_32_characters_long
-   JWT_EXPIRES_IN=1d
-   FRONTEND_URL=http://localhost:5173
-   ADMIN_EMAIL=admin@k12hunar.com
-   ADMIN_PASSWORD=Admin@Secure2026!
-   ```
-4. Install dependencies:
-   ```bash
-   npm install
-   ```
-5. Seed the initial admin account (hashes password using `bcrypt` and upserts admin into PostgreSQL):
-   ```bash
-   npm run seed:admin
-   ```
-6. Run the automated backend verification test suite:
-   ```bash
-   npm test
-   ```
-7. Start the backend server in development mode:
-   ```bash
-   npm run dev
-   # Server runs at http://localhost:5000
-   ```
+### 2. Schema Definition (`backend/schema.sql`)
+The database contains two core tables, custom CHECK constraints, and optimized B-Tree indexes:
 
-### 4. Frontend Setup
-1. Open a second terminal and navigate to `/frontend`:
-   ```bash
-   cd frontend
-   ```
-2. Copy the sample environment file:
-   ```bash
-   cp .env.example .env
-   ```
-3. Edit `frontend/.env`:
-   ```env
-   VITE_API_URL=http://localhost:5000/api
-   ```
-4. Install dependencies:
-   ```bash
-   npm install
-   ```
-5. Verify production build:
-   ```bash
-   npm run build
-   ```
-6. Start the frontend development server:
-   ```bash
-   npm run dev
-   # App runs at http://localhost:5173
-   ```
+```sql
+-- Enable pgcrypto for UUID generation
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- Table: admins
+CREATE TABLE IF NOT EXISTS admins (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Table: inquiries
+CREATE TABLE IF NOT EXISTS inquiries (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_type TEXT NOT NULL CHECK (user_type IN ('Parent', 'Student', 'School')),
+    category TEXT NOT NULL CHECK (category IN ('Scholarship', 'Concert', 'Admission', 'General Query')),
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    message TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'New' CHECK (status IN ('New', 'In Progress', 'Resolved')),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Performance Indexes
+CREATE INDEX IF NOT EXISTS idx_inquiries_category ON inquiries (category);
+CREATE INDEX IF NOT EXISTS idx_inquiries_user_type ON inquiries (user_type);
+CREATE INDEX IF NOT EXISTS idx_inquiries_created_at ON inquiries (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_inquiries_status ON inquiries (status);
+```
+
+### 3. Initializing the Database
+You can initialize the database using either of the following methods:
+- **Automated CLI Execution**: Set `DATABASE_URL` in `backend/.env` and execute:
+  ```bash
+  npm run db:init
+  ```
+- **Supabase SQL Editor**: Open the Supabase dashboard, navigate to the **SQL Editor**, paste the contents of `backend/schema.sql`, and click **Run**.
 
 ---
 
-## ⚙️ Environment Variables Reference
+## 💻 Local Installation & Execution
+
+### Prerequisites
+- **Node.js**: v18.0.0 or higher
+- **npm**: v9.0.0 or higher
+- Access to a PostgreSQL instance (Supabase or local)
+
+### Step 1: Clone Repository
+```bash
+git clone https://github.com/Sagar92115/project.git
+cd project
+```
+
+### Step 2: Configure Environment Variables
+Create the environment files in both the `backend/` and `frontend/` directories:
+
+**Backend (`backend/.env`):**
+```env
+PORT=5000
+NODE_ENV=development
+DATABASE_URL=postgresql://<DB_USER>:<DB_PASSWORD>@<DB_HOST>:5432/<DB_NAME>?sslmode=require
+JWT_SECRET=your_custom_jwt_secret_min_32_characters_long
+JWT_EXPIRES_IN=1d
+FRONTEND_URL=http://localhost:5173
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=your_secure_admin_password
+```
+
+**Frontend (`frontend/.env`):**
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+### Step 3: Install Dependencies
+Install dependencies for both projects in one step from the root directory:
+```bash
+npm run install:all
+```
+*(Alternatively, run `npm install` inside `/backend` and `/frontend` individually).*
+
+### Step 4: Initialize Database & Seed Administrator
+Run the automated schema initializer and admin seeding scripts:
+```bash
+# Creates the database tables, constraints, and indexes
+npm run db:init
+
+# Hashes the password using bcrypt and registers the admin
+npm run seed:admin
+```
+
+### Step 5: Run Automated Tests
+Verify that all API routes, validation rules, and authentication middlewares function correctly:
+```bash
+npm test
+```
+
+### Step 6: Start Development Environment
+Launch both backend and frontend concurrently with a single command from the monorepo root:
+```bash
+npm run dev
+```
+- **Frontend Portal**: `http://localhost:5173`
+- **Backend API**: `http://localhost:5000`
+- **API Health Check**: `http://localhost:5000/api/health`
+
+---
+
+## ⚙️ Environment Variables Documentation
 
 ### Backend (`/backend/.env`)
 
-| Variable | Required | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `PORT` | No | Port on which Express server listens (default: `5000`) | `5000` |
-| `DATABASE_URL` | **Yes** | Supabase/PostgreSQL connection URI with SSL enabled | `postgresql://postgres.xxx:pass@aws-0-xx.pooler.supabase.com:6543/postgres?sslmode=require` |
-| `JWT_SECRET` | **Yes** | Secret string used to sign and verify custom JWTs | `a_secure_random_key_min_32_chars` |
-| `JWT_EXPIRES_IN` | No | JWT token expiration lifespan | `1d` |
-| `FRONTEND_URL` | **Yes** | Allowed CORS origin(s). Supports comma-separated list | `http://localhost:5173,https://your-app.vercel.app` |
-| `ADMIN_EMAIL` | **Yes** | Email used by `npm run seed:admin` | `admin@k12hunar.com` |
-| `ADMIN_PASSWORD` | **Yes** | Plaintext password to hash during admin seeding | `Admin@Secure2026!` |
+| Variable | Required | Type | Description | Safe Example Placeholder |
+| :--- | :---: | :---: | :--- | :--- |
+| `PORT` | Optional | Number | Port on which the Express server listens (default: `5000`) | `5000` |
+| `NODE_ENV` | Optional | String | Runtime environment (`development`, `production`, `test`) | `development` |
+| `DATABASE_URL` | **Yes** | String | PostgreSQL connection URI with SSL configuration | `postgresql://<username>:<password>@<host>:5432/<database>?sslmode=require` |
+| `JWT_SECRET` | **Yes** | String | Cryptographic secret key used to sign and verify JWT tokens | `generate_a_random_32_char_secret_key` |
+| `JWT_EXPIRES_IN` | Optional | String | Expiration duration for issued JWT tokens | `1d` |
+| `FRONTEND_URL` | **Yes** | String | Whitelisted CORS origin(s), comma-separated for multiple | `http://localhost:5173,https://<your-app>.vercel.app` |
+| `ADMIN_EMAIL` | **Yes** | String | Administrative email account used by `npm run seed:admin` | `admin@example.com` |
+| `ADMIN_PASSWORD` | **Yes** | String | Plaintext password to hash and store during admin seeding | `your_strong_admin_password` |
 
 ### Frontend (`/frontend/.env`)
 
-| Variable | Required | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `VITE_API_URL` | **Yes** | Base URL for backend API calls | `http://localhost:5000/api` |
+| Variable | Required | Type | Description | Safe Example Placeholder |
+| :--- | :---: | :---: | :--- | :--- |
+| `VITE_API_URL` | **Yes** | String | Base URL of the backend API endpoints | `http://localhost:5000/api` |
 
 ---
 
-## 🔒 How to Test Custom JWT Authentication
+## 📡 Complete REST API Documentation
 
-### A. Testing via Browser UI
-1. Navigate to `http://localhost:5173/admin` directly in an incognito window.
-   - **Result**: You are immediately intercepted and redirected to `/admin/login`.
-2. On `/admin/login`, attempt to sign in with incorrect credentials (`wrong@test.com` / `123456`).
-   - **Result**: A red error banner appears displaying `"Invalid credentials"`.
-3. Sign in with the seeded credentials:
-   - **Email**: `admin@k12hunar.com`
-   - **Password**: `Admin@Secure2026!`
-   - **Result**: Redirected to `/admin`. In browser DevTools -> Application -> Local Storage, inspect `adminToken`.
-4. Click the **Logout** button in the top navbar.
-   - **Result**: `adminToken` is destroyed and you are redirected to `/admin/login`.
+### 1. Health Check
+- **Endpoint**: `GET /api/health`
+- **Access**: Public
+- **Description**: Verifies API availability and returns server timestamp.
+- **Response** (`200 OK`):
+  ```json
+  {
+    "status": "ok",
+    "service": "EdTech CRM & Inquiry System API",
+    "timestamp": "2026-10-31T14:30:00.000Z"
+  }
+  ```
 
 ---
 
-### B. Testing via `curl`
+### 2. Submit Public Inquiry
+- **Endpoint**: `POST /api/inquiries`
+- **Access**: Public (Rate-limited: 20 requests per 15 min per IP)
+- **Request Body**:
+  ```json
+  {
+    "user_type": "Parent",
+    "category": "Admission",
+    "name": "Jane Doe",
+    "email": "jane.doe@example.com",
+    "phone": "9876543210",
+    "message": "Inquiring about admission criteria for the upcoming academic session."
+  }
+  ```
+- **Response** (`201 Created`):
+  ```json
+  {
+    "success": true,
+    "message": "Inquiry submitted successfully. Our team will contact you shortly.",
+    "data": {
+      "id": "b78b549c-36bc-49a8-971c-17c417f60a12",
+      "user_type": "Parent",
+      "category": "Admission",
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "phone": "9876543210",
+      "message": "Inquiring about admission criteria for the upcoming academic session.",
+      "status": "New",
+      "created_at": "2026-10-31T14:31:00.000Z"
+    }
+  }
+  ```
 
-#### 1. Public Inquiry Submission (No Auth Required)
+---
+
+### 3. Admin Authentication (Login)
+- **Endpoint**: `POST /api/auth/login`
+- **Access**: Public (Rate-limited: 10 attempts per 15 min per IP)
+- **Request Body**:
+  ```json
+  {
+    "email": "admin@example.com",
+    "password": "your_admin_password"
+  }
+  ```
+- **Response** (`200 OK`):
+  ```json
+  {
+    "success": true,
+    "message": "Login successful",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "admin": {
+      "id": "971c9feb-bbac-44bc-9e81-c3817c417f60",
+      "email": "admin@example.com"
+    }
+  }
+  ```
+
+---
+
+### 4. Verify Admin Session
+- **Endpoint**: `GET /api/auth/me`
+- **Access**: Protected (Requires `Authorization: Bearer <token>`)
+- **Response** (`200 OK`):
+  ```json
+  {
+    "success": true,
+    "admin": {
+      "id": "971c9feb-bbac-44bc-9e81-c3817c417f60",
+      "email": "admin@example.com"
+    }
+  }
+  ```
+
+---
+
+### 5. Fetch Inquiries with Filtering, Search & Pagination
+- **Endpoint**: `GET /api/inquiries`
+- **Access**: Protected (Requires `Authorization: Bearer <token>`)
+- **Query Parameters**:
+  - `page` *(optional, default: 1)*: Current page number.
+  - `limit` *(optional, default: 10, max: 100)*: Records per page.
+  - `category` *(optional)*: Filter by `Scholarship`, `Concert`, `Admission`, or `General Query`.
+  - `userType` *(optional)*: Filter by `Parent`, `Student`, or `School`.
+  - `search` *(optional)*: Case-insensitive search on candidate name or phone.
+- **Response** (`200 OK`):
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": "b78b549c-36bc-49a8-971c-17c417f60a12",
+        "user_type": "Parent",
+        "category": "Admission",
+        "name": "Jane Doe",
+        "email": "jane.doe@example.com",
+        "phone": "9876543210",
+        "message": "Inquiring about admission criteria...",
+        "status": "New",
+        "created_at": "2026-10-31T14:31:00.000Z"
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "totalPages": 1,
+    "limit": 10
+  }
+  ```
+
+---
+
+### 6. Update Inquiry Status
+- **Endpoint**: `PATCH /api/inquiries/:id/status`
+- **Access**: Protected (Requires `Authorization: Bearer <token>`)
+- **URL Parameter**: `id` (UUID)
+- **Request Body**:
+  ```json
+  {
+    "status": "In Progress"
+  }
+  ```
+- **Response** (`200 OK`):
+  ```json
+  {
+    "success": true,
+    "message": "Inquiry status updated to In Progress",
+    "data": {
+      "id": "b78b549c-36bc-49a8-971c-17c417f60a12",
+      "status": "In Progress"
+    }
+  }
+  ```
+
+---
+
+## 🧪 Testing & Verification Guide
+
+### 1. Automated Test Suite
+The repository includes an automated testing script (`backend/src/scripts/verifyBackend.js`) validating health endpoints, authentication middleware, validation guards, 10-digit phone enforcement, and 404 responses.
+```bash
+npm test
+```
+
+### 2. Manual Verification using `curl`
+
+#### Step A: Health Check
+```bash
+curl -X GET http://localhost:5000/api/health
+```
+
+#### Step B: Public Inquiry Submission
 ```bash
 curl -X POST http://localhost:5000/api/inquiries \
   -H "Content-Type: application/json" \
   -d '{
-    "user_type": "Parent",
-    "category": "Admission",
-    "name": "Rajesh Kumar",
-    "email": "rajesh@example.com",
+    "user_type": "Student",
+    "category": "Scholarship",
+    "name": "Alex Smith",
+    "email": "alex@example.com",
     "phone": "9876543210",
-    "message": "Looking for grade 8 admission process and fee structure."
+    "message": "Applying for the merit-based scholarship."
   }'
 ```
-**Expected Response** (`201 Created`):
-```json
-{
-  "success": true,
-  "message": "Inquiry submitted successfully. Our team will contact you shortly.",
-  "data": {
-    "id": "UUID-...",
-    "user_type": "Parent",
-    "category": "Admission",
-    "name": "Rajesh Kumar",
-    "email": "rajesh@example.com",
-    "phone": "9876543210",
-    "message": "Looking for grade 8 admission process and fee structure.",
-    "status": "New",
-    "created_at": "..."
-  }
-}
-```
 
-#### 2. Access Protected Route Without Token (Expect `401 Unauthorized`)
+#### Step C: Protected Endpoint Without Token (Expect `401 Unauthorized`)
 ```bash
 curl -X GET http://localhost:5000/api/inquiries
 ```
-**Expected Response** (`401 Unauthorized`):
-```json
-{
-  "success": false,
-  "message": "Access denied. No authentication token provided."
-}
-```
 
-#### 3. Admin Login (Retrieve JWT Token)
+#### Step D: Admin Authentication (Retrieve JWT)
 ```bash
 curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@k12hunar.com",
-    "password": "Admin@Secure2026!"
+    "email": "admin@example.com",
+    "password": "your_secure_admin_password"
   }'
 ```
-**Expected Response** (`200 OK`):
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "admin": {
-    "id": "...",
-    "email": "admin@k12hunar.com"
-  }
-}
-```
 
-#### 4. Access Protected Route With JWT Token (Expect `200 OK`)
+#### Step E: Fetch Inquiries with Bearer Token
 ```bash
 curl -X GET "http://localhost:5000/api/inquiries?page=1&limit=10" \
   -H "Authorization: Bearer <PASTE_TOKEN_HERE>"
 ```
-**Expected Response** (`200 OK`):
-```json
-{
-  "success": true,
-  "data": [ ... ],
-  "total": 1,
-  "page": 1,
-  "totalPages": 1,
-  "limit": 10
-}
-```
 
-#### 5. Update Inquiry Status (Protected Route)
+#### Step F: Update Status of an Inquiry
 ```bash
 curl -X PATCH http://localhost:5000/api/inquiries/<INQUIRY_UUID>/status \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <PASTE_TOKEN_HERE>" \
-  -d '{
-    "status": "In Progress"
-  }'
-```
-**Expected Response** (`200 OK`):
-```json
-{
-  "success": true,
-  "message": "Inquiry status updated to In Progress",
-  "data": {
-    "id": "<INQUIRY_UUID>",
-    "status": "In Progress"
-  }
-}
+  -d '{"status": "Resolved"}'
 ```
 
 ---
 
-## 📡 Complete API Endpoints List
+## ☁️ Production Deployment Instructions
 
-| Method | Endpoint | Access | Description |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/health` | Public | System health check and server timestamp |
-| `POST` | `/api/inquiries` | Public (Rate limited) | Submit a new inquiry |
-| `POST` | `/api/auth/login` | Public (Rate limited) | Authenticate admin & issue custom JWT |
-| `GET` | `/api/auth/me` | Protected (JWT) | Get currently authenticated admin details |
-| `GET` | `/api/inquiries` | Protected (JWT) | Fetch inquiries with filtering, search & pagination |
-| `PATCH` | `/api/inquiries/:id/status` | Protected (JWT) | Update inquiry status (`New`, `In Progress`, `Resolved`) |
+### A. Deploy Backend to Render
 
----
-
-## ☁️ Deployment Guide
-
-### A. Deploy Backend on Render
-1. Create an account on [Render](https://render.com).
-2. Click **New +** -> **Web Service**.
-3. Connect your GitHub repository.
+1. Log into your account on [Render](https://render.com).
+2. Click **New +** → **Web Service**.
+3. Select and connect your repository: `https://github.com/Sagar92115/project`.
 4. Configure service settings:
-   - **Name**: `k12-hunar-crm-api`
-   - **Root Directory**: `backend`
+   - **Name**: `edtech-crm-api` *(or preferred identifier)*
+   - **Root Directory**: `backend` *(Critical: specifies the backend subfolder)*
    - **Environment**: `Node`
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
-5. Add Environment Variables in the Render dashboard:
-   - `PORT`: `10000` (or leave default for Render)
-   - `DATABASE_URL`: `postgresql://postgres.[REF]:[PASS]@[HOST]:6543/postgres?sslmode=require`
-   - `JWT_SECRET`: *(Generate a secure 32+ character random string)*
+   - **Instance Type**: `Free`
+5. Configure Environment Variables in Render:
+   - `DATABASE_URL`: `postgresql://<user>:<password>@<host>:5432/<database>?sslmode=require`
+   - `JWT_SECRET`: *(Generate a secure random string of 32+ characters)*
    - `JWT_EXPIRES_IN`: `1d`
-   - `ADMIN_EMAIL`: `admin@k12hunar.com`
-   - `ADMIN_PASSWORD`: `Admin@Secure2026!`
-   - `FRONTEND_URL`: `http://localhost:5173` *(Will update after frontend deployment)*
+   - `FRONTEND_URL`: `https://edtech-crm-three.vercel.app` *(Include localhost for local dev if desired)*
+   - `ADMIN_EMAIL`: `admin@example.com`
+   - `ADMIN_PASSWORD`: `your_secure_admin_password`
 6. Click **Create Web Service**.
-7. Once deployed, run the seed script from Render's **Shell** tab:
+7. Once deployed, open Render's **Shell** tab and run:
    ```bash
    npm run seed:admin
    ```
-8. Copy your Render backend URL: `https://k12-hunar-crm-api.onrender.com`.
+8. Copy your live Render API URL: `https://<your-backend-app>.onrender.com`.
 
 ---
 
-### B. Deploy Frontend on Vercel
-1. Create an account on [Vercel](https://vercel.com).
-2. Click **Add New...** -> **Project** and import your GitHub repository.
-3. Configure project settings:
+### B. Deploy Frontend to Vercel
+
+1. Log into [Vercel](https://vercel.com).
+2. Click **Add New...** → **Project** and import `Sagar92115/project`.
+3. Configure the build parameters:
    - **Framework Preset**: `Vite`
-   - **Root Directory**: Click *Edit* and select `frontend`
+   - **Root Directory**: Edit and set to `frontend`
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 4. Expand **Environment Variables**:
-   - `VITE_API_URL`: `https://k12-hunar-crm-api.onrender.com/api` *(Your Render backend URL + `/api`)*
+   - `VITE_API_URL`: `https://<your-backend-app>.onrender.com/api` *(Render URL + `/api`)*
 5. Click **Deploy**.
-6. Vercel will build the project and output your live frontend URL: `https://k12-hunar-crm.vercel.app`.
+6. The bundled [`frontend/vercel.json`](file:///frontend/vercel.json) automatically directs all SPA routes back to `/index.html`.
 
 ---
 
-### C. Connect Frontend & Backend CORS
-1. Return to your **Render** dashboard for the backend service.
-2. Under **Environment**, update `FRONTEND_URL` to include your Vercel domain:
-   ```text
-   FRONTEND_URL=http://localhost:5173,https://k12-hunar-crm.vercel.app
-   ```
-3. Click **Save Changes** (Render will redeploy automatically).
-4. Visit your Vercel URL and test submitting an inquiry and logging in as admin!
+## 🔒 Security Best Practices
+
+> [!CAUTION]
+> **Credential & Secret Protection**:
+> - Never commit `.env`, `.env.local`, or any file containing real database passwords, secret keys, or authentication tokens to version control.
+> - The root `.gitignore` file explicitly excludes `.env`, `node_modules/`, `dist/`, and build artifacts.
+> - Always utilize `.env.example` templates with generic placeholders for public repositories.
+> - If any credential or database URI is accidentally exposed, immediately rotate the password in the database dashboard and invalidate previous tokens.
 
 ---
 
-## ⚖️ Evaluation Checklist
+## 👨‍💻 Author & Project Information
 
-- [x] Monorepo contains both `/backend` and `/frontend` directories.
-- [x] Database schema defined in `/backend/schema.sql` (compatible with Supabase SQL Editor).
-- [x] Supabase used **ONLY as plain PostgreSQL** via standard `pg` connection pool.
-- [x] Zero Supabase Auth / SDK / RLS used; **custom JWT authentication** implemented from scratch.
-- [x] Public inquiry form with validation (email, 10-digit phone, enum checks) and responsive UI.
-- [x] Admin login with bcrypt verification and JWT generation.
-- [x] Protected admin dashboard with Category filter, User Type filter, and debounced Search.
-- [x] Inline status updates (`New`, `In Progress`, `Resolved`) with status badge styling.
-- [x] Sample `.env.example` provided for both backend and frontend.
-- [x] Documentation with curl commands, local setup, and deployment guides.
+- **Developer**: Sagar Patel
+- **Contact Email**: ss5310785@gmail.com
+- **GitHub Profile**: [@Sagar92115](https://github.com/Sagar92115)
+- **Project Role**: Full-Stack Developer Assessment Submission
+- **Target Organization**: K12 Hunar
+- **License**: MIT
