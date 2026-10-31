@@ -23,19 +23,6 @@ Built as a production monorepo adhering strictly to clean architectural principl
 
 ---
 
-## 📸 Application Screenshots
-
-| Public Inquiry Submission Form | Admin Authentication Portal |
-| :---: | :---: |
-| ![Public Inquiry Form](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/inquiry-form.png)<br>*Accessible public portal with real-time field validation* | ![Admin Login](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/admin-login.png)<br>*Secure administrative authentication with custom JWT* |
-
-| Admin CRM Inquiry Management | Inquiry Inspection & Status Lifecycle |
-| :---: | :---: |
-| ![Admin Dashboard](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/admin-dashboard.png)<br>*Filterable, searchable inquiry table with metric cards* | ![Status Modal](https://raw.githubusercontent.com/Sagar92115/project/main/docs/screenshots/status-modal.png)<br>*Real-time status updater & full inquiry message view* |
-
-
----
-
 ## 🚀 Key Features
 
 ### 1. Public Inquiry Portal (`/`)
