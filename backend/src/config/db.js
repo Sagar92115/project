@@ -12,13 +12,15 @@ const isLocalhost = connectionString && (
   connectionString.includes('127.0.0.1')
 );
 
-const pool = new Pool({
-  connectionString,
-  ssl: isLocalhost ? false : { rejectUnauthorized: false }
-});
+// Strip query parameters like ?sslmode=require so that pg doesn't override rejectUnauthorized
+let cleanConnectionString = connectionString;
+if (cleanConnectionString && cleanConnectionString.includes('sslmode=')) {
+  cleanConnectionString = cleanConnectionString.replace(/[?&]sslmode=[^&]+/, '');
+}
 
-pool.on('connect', () => {
-  // Connected successfully
+const pool = new Pool({
+  connectionString: cleanConnectionString,
+  ssl: isLocalhost ? false : { rejectUnauthorized: false }
 });
 
 pool.on('error', (err) => {
